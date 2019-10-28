@@ -3,9 +3,9 @@
     <!-- 登录卡片 -->
     <el-card>
       <!-- logo -->
-        <img src="../../assets/logo_index.png" width="200px" alt />
+      <img src="../../assets/logo_index.png" width="200px" alt />
 
-      <el-form ref="form" :model="loginForm" :rules="loginRules" status-icon >
+      <el-form ref="form" :model="loginForm" :rules="loginRules" status-icon>
         <el-form-item prop="mobile">
           <el-input v-model="loginForm.mobile" placeholder="请输入手机号"></el-input>
         </el-form-item>
@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import local from '../../utils/local.js'
 export default {
   data () {
     const checkMobile = (rule, value, callback) => {
@@ -39,14 +40,16 @@ export default {
       }
     }
     return {
-      loginForm: { mobile: '', code: '' },
+      loginForm: { mobile: '13911111111', code: '246810' },
       loginRules: {
         mobile: [
           { required: true, message: '请输入手机号码', trigger: 'blur' },
           { validator: checkMobile, trigger: 'blur' }
         ],
-        code: [{ required: true, message: '请输入验证码', trigger: 'blur' },
-          { min: 6, max: 6, message: '验证码6个字符', trigger: 'blur' }]
+        code: [
+          { required: true, message: '请输入验证码', trigger: 'blur' },
+          { min: 6, max: 6, message: '验证码6个字符', trigger: 'blur' }
+        ]
       }
     }
   },
@@ -54,17 +57,20 @@ export default {
     loginClick () {
       this.$refs['form'].validate(valid => {
         if (valid) {
-          this.$http.post('authorizations', this.loginForm).then(res => {
-            this.$router.push('/')
-          }).catch(() => {
-            this.$message.error('手机号或验证码错误')
-          })
+          this.$http
+            .post('authorizations', this.loginForm)
+            .then(res => {
+              local.setUser(res.data.data)
+              this.$router.push('/')
+            })
+            .catch(() => {
+              this.$message.error('手机号或验证码错误')
+            })
         }
       })
     }
   }
 }
-
 </script>
 
 <style scoped lang="less">
@@ -77,19 +83,19 @@ export default {
   top: 0;
 
   .el-card {
-  width: 470px;
-  height: 370px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+    width: 470px;
+    height: 370px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 
-  img {
-   display: block;
-   margin: 0 auto;
-   width:200px;
+    img {
+      display: block;
+      margin: 0 auto;
+      width: 200px;
+    }
   }
-}
 }
 .el-form {
   margin-top: 30px;
