@@ -5,6 +5,8 @@ import Home from '@/views/home/index.vue'
 import Welcome from '@/views/welcome/index.vue'
 import notFound from '@/views/404'
 import local from '@/utils/local.js'
+import Active from '@/views/active'
+import Publish from '@/views/publish'
 Vue.use(VueRouter)
 const router = new VueRouter({
   routes: [
@@ -19,7 +21,16 @@ const router = new VueRouter({
       children: [{
         path: '',
         component: Welcome
-      }]
+      },
+      {
+        path: '/article',
+        component: Active
+      },
+      {
+        path: '/publish',
+        component: Publish
+      }
+      ]
     },
     {
       path: '*',

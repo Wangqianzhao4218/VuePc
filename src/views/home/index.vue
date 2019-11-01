@@ -3,8 +3,9 @@
     <!-- 左边内容 -->
     <el-aside :width="isOpen?'200px':'64px'">
       <div class="logo" :class="{smallLogo:!isOpen}"></div>
+      <!-- 1- --->
       <el-menu
-        default-active="/"
+        :default-active="$route.path"
         background-color="#121213"
         text-color="#fff"
         active-text-color="#ffd07b"
@@ -51,13 +52,13 @@
         <!-- 下拉菜单组件 -->
         <el-dropdown class="dropdown">
           <span class="el-dropdown-link">
-            <img class="headIcon" src="../../assets/523.jpg" alt />
-            <span class="userName">六叔的绯闻女友</span>
+            <img class="headIcon" :src="userInfo.photo" alt />
+            <span class="userName">{{userInfo.name}}</span>
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item icon="el-icon-setting">个人设置</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-unlock">退出登录</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-setting" @click.native="settingClick">个人设置</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-unlock" @click.native="quitClick">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
@@ -70,16 +71,30 @@
 </template>
 
 <script>
+import local from '@/utils/local.js'
 export default {
   data () {
     return {
-      isOpen: true
+      isOpen: true,
+      userInfo: {}
     }
   },
   methods: {
     btnClick () {
       this.isOpen = !this.isOpen
+    },
+    settingClick () {
+      this.$router.push('/setting')
+    },
+    quitClick () {
+      local.delUser()
+      this.$router.push('/login')
     }
+  },
+  created () {
+    const getUser = local.getUser()
+    this.userInfo.name = getUser.name
+    this.userInfo.photo = getUser.photo
   }
 }
 </script>

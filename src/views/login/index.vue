@@ -40,7 +40,7 @@ export default {
       }
     }
     return {
-      loginForm: { mobile: '13911111111', code: '246810' },
+      loginForm: { mobile: '13074057666', code: '246810' },
       loginRules: {
         mobile: [
           { required: true, message: '请输入手机号码', trigger: 'blur' },
