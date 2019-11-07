@@ -1,5 +1,5 @@
 <template>
-  <div class="container-article">
+  <div class="container-active">
     <el-card>
       <div slot="header">
         <!-- <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -21,9 +21,10 @@
         </el-form-item>
 
         <el-form-item label="频道：">
-          <el-select v-model="reqParams.channel_id" placeholder="请选择">
+          <!-- <el-select v-model="reqParams.channel_id" placeholder="请选择">
             <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
+          </el-select> -->
+          <my-channel v-model="reqParams.channel_id"></my-channel>
         </el-form-item>
 
         <el-form-item label="日期：">
@@ -49,6 +50,7 @@
       <div slot="header">
         <span>根据筛选条件共查询到 {{total}} 条结果</span>
       </div>
+
       <el-table :data="articles">
         <el-table-column label="封面">
           <template slot-scope="scope">
@@ -79,7 +81,7 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="primary" icon="el-icon-edit" circle @click="publishClick(scope.row.id)"></el-button>
-            <el-button type="danger" icon="el-icon-delete" circle @click="delClick"></el-button>
+            <el-button type="danger" icon="el-icon-delete" circle @click="delClick(scope.row.id)"></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -126,6 +128,7 @@ export default {
       } = await this.$http.get('articles', { params: this.reqParams })
       this.articles = data.results
       this.total = data.total_count
+      // console.log(this.articles)
     },
     btnClick (Page) {
       // console.log(page)
@@ -145,10 +148,12 @@ export default {
       this.getArticles()
     },
     publishClick (id) {
-      this.$router.push(`/publish?${id}`)
+      this.$router.push({ path: '/publish', query: { id } })
     },
-    delClick () {
-
+    async delClick (id) {
+      await this.$http.delete(`articles/${id}`)
+      this.$message.success('删除文章成功')
+      this.getArticles()
     }
   },
   created () {

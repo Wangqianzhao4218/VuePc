@@ -72,6 +72,7 @@
 
 <script>
 import local from '@/utils/local.js'
+import eventBus from '@/eventBus.js'
 export default {
   data () {
     return {
@@ -95,6 +96,12 @@ export default {
     const getUser = local.getUser()
     this.userInfo.name = getUser.name
     this.userInfo.photo = getUser.photo
+    eventBus.$on('updateName', (name) => {
+      this.userInfo.name = name
+    })
+    eventBus.$on('changphoto', (photo) => {
+      this.userInfo.photo = photo
+    })
   }
 }
 </script>
